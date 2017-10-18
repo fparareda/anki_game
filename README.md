@@ -15,4 +15,4 @@ When all the card has been seen, the **session** is over :
 - The cards in the orange box will be studied again the next
 - The cards in the green box, will be studied again two days later
 
-The file is in **files** folder and the name is deckOfCards.txt
+Note: The file is in **files** folder and the filename is deckOfCards.txt
