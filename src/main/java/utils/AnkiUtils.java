@@ -4,12 +4,8 @@ import model.Card;
 import model.CardStatus;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by ferran on 17/10/17.
@@ -36,8 +32,11 @@ public class AnkiUtils {
                 File file = new File(fileName);
                 if(file.exists()){
                         listOfSentences = new ArrayList<>();
-                        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
-                                listOfSentences = stream.collect(Collectors.toList());
+                        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                            String line;
+                            while ((line = br.readLine()) != null) {
+                                listOfSentences.add(line);
+                            }
                         } catch (IOException e) {
                                 e.printStackTrace();
                         }
@@ -45,7 +44,7 @@ public class AnkiUtils {
                 return listOfSentences;
         }
 
-        private static List<Card> convertSentencesToCards(List<String> allSentences){
+        public static List<Card> convertSentencesToCards(List<String> allSentences){
                 List<Card> listOfCards = new ArrayList<>();
 
                 for (String sentence : allSentences) {
@@ -54,11 +53,10 @@ public class AnkiUtils {
                                 listOfCards.add(card);
                         }
                 }
-
                 return listOfCards;
         }
 
-        private static Card convertSentenceToCard(String sentence){
+        public static Card convertSentenceToCard(String sentence){
                 String[] phrases = sentence.split("\\|");
                 if(phrases.length == 2){        // This card does not have status
                         return new Card(CardStatus.RED_BOX, phrases[0], phrases[1]);
@@ -68,7 +66,7 @@ public class AnkiUtils {
                 return null;
         }
 
-        private static CardStatus getCardStatus(String statusOfCard) {
+        public static CardStatus getCardStatus(String statusOfCard) {
                 for(CardStatus status : CardStatus.values()){
                         if(status.name().equals(statusOfCard)){
                                 return status;

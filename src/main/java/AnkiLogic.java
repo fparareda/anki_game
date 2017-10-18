@@ -2,6 +2,7 @@ import model.Card;
 import model.CardStatus;
 import utils.AnkiUtils;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ public class AnkiLogic {
     public static final String ANSI_BOLD = "\u001B[1m";
     public static final String ANSI_RESET = "\u001B[0m";
 
-    public List<Card> loadCardsStatus(String fileName){
+    public List<Card> loadCardsStatus(String fileName) {
         List<Card> listOfCards = AnkiUtils.readCardsFromFile(fileName);
         return listOfCards;
     }

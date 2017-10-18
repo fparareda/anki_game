@@ -53,4 +53,9 @@ public class Card {
     public void setAnswer(String answer) {
         this.answer = answer;
     }
+
+    @Override
+    public String toString() {
+        return this.status.name() + "\n" + this.question + "\n" + this.answer;
+    }
 }
