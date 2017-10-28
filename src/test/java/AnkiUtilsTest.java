@@ -45,6 +45,44 @@ public class AnkiUtilsTest {
     }
 
     @Test
+    public void testCheckCardsStatus() {
+        AnkiUtils ankiUtils = new AnkiUtils();
+        String question = "What enzyme breaks down sugars mouth and digestive tract?";
+        String answer = "Amylase";
+        Card cardGreenBox = new Card(CardStatus.GREEN_BOX, question, answer);
+        Card cardOrangeBox = new Card(CardStatus.ORANGE_BOX, question, answer);
+        Card cardRedBox = new Card(CardStatus.RED_BOX, question, answer);
+
+        assertEquals(cardGreenBox.isInGreenBox(), true);
+        assertEquals(cardOrangeBox.isInOrangeBox(), true);
+        assertEquals(cardRedBox.isInRedBox(), true);
+    }
+
+
+    @Test
+    public void testCheckMoveCards() {
+        AnkiUtils ankiUtils = new AnkiUtils();
+        String question = "What enzyme breaks down sugars mouth and digestive tract?";
+        String answer = "Amylase";
+        Card cardGreenBox = new Card(CardStatus.GREEN_BOX, question, answer);
+        Card cardOrangeBox = new Card(CardStatus.ORANGE_BOX, question, answer);
+        Card cardRedBox = new Card(CardStatus.RED_BOX, question, answer);
+
+        cardGreenBox.moveCardToOrangeBox();
+        cardOrangeBox.moveCardToRedBox();
+        cardRedBox.moveCardToGreenBox();
+
+        assertEquals(cardGreenBox.isInGreenBox(), false);
+        assertEquals(cardGreenBox.isInOrangeBox(), true);
+        
+        assertEquals(cardOrangeBox.isInOrangeBox(), false);
+        assertEquals(cardOrangeBox.isInRedBox(), true);
+
+        assertEquals(cardRedBox.isInRedBox(), false);
+        assertEquals(cardRedBox.isInGreenBox(), true);
+    }
+
+    @Test
     public void testConvertSentencesToCards() {
         AnkiUtils ankiUtils = new AnkiUtils();
         List<String> allSentences = new ArrayList<>();
@@ -60,7 +98,6 @@ public class AnkiUtilsTest {
         assertEquals(ankiUtils.convertSentencesToCards(allSentences).get(0).getQuestion(), allCardsOnList.get(0).getQuestion());
         assertEquals(ankiUtils.convertSentencesToCards(allSentences).get(0).getAnswer(), allCardsOnList.get(0).getAnswer());
     }
-
 
     @Test
     public void testAllCardsGreenBox() {

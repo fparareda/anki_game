@@ -19,13 +19,13 @@ public class Card {
     public void setAnswerStatus(int usersAnswer) {
         switch (usersAnswer){
             case 1:
-                setStatus(CardStatus.GREEN_BOX);
+                moveCardToGreenBox();
                 break;
             case 2:
-                setStatus(CardStatus.ORANGE_BOX);
+                moveCardToOrangeBox();
                 break;
             default:
-                setStatus(CardStatus.RED_BOX);
+                moveCardToRedBox();
                 break;
         }
     }
@@ -34,28 +34,53 @@ public class Card {
         return status;
     }
 
-    public void setStatus(CardStatus status) {
-        this.status = status;
-    }
-
     public String getQuestion() {
         return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
     }
 
     public String getAnswer() {
         return answer;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
 
     @Override
     public String toString() {
         return this.status.name() + "\n" + this.question + "\n" + this.answer;
+    }
+
+    public boolean canBeChecked() {
+        return CardStatus.RED_BOX.equals(this.status);
+    }
+
+    public boolean isInGreenBox() {
+        return CardStatus.GREEN_BOX.name().equals(this.status.name());
+    }
+    public boolean isInOrangeBox() {
+        return CardStatus.ORANGE_BOX.name().equals(this.status.name());
+    }
+    public boolean isInRedBox() {
+        return CardStatus.RED_BOX.name().equals(this.status.name());
+    }
+
+    public void moveCardToGreenBox() {
+        this.status = CardStatus.GREEN_BOX;
+    }
+    public void moveCardToOrangeBox() {
+        this.status = CardStatus.ORANGE_BOX;
+    }
+    public void moveCardToRedBox() {
+        this.status = CardStatus.RED_BOX;
+    }
+
+
+    public void printStatus(){
+        String ANSI_RESET = "\u001B[0m";
+        if(CardStatus.GREEN_BOX.name().equals(this.status.name())){
+            System.out.println("\u001B[32m" +"Green Box: "+ANSI_RESET);
+        } else if(CardStatus.ORANGE_BOX.name().equals(this.status.name())){
+            System.out.println("\u001B[36m" +"Orange Box: "+ANSI_RESET);
+        } else if(CardStatus.RED_BOX.name().equals(this.status.name())){
+            System.out.println("\u001B[31m" +"Red Box: "+ANSI_RESET);
+        }
     }
 }

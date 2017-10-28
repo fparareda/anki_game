@@ -11,43 +11,45 @@ import java.util.Scanner;
  */
 public class AnkiLogic {
 
+    private AnkiUtils ankiUtils = new AnkiUtils();
     public static final String ANSI_BOLD = "\u001B[1m";
     public static final String ANSI_RESET = "\u001B[0m";
 
     public List<Card> loadCardsStatus(String fileName) {
-        List<Card> listOfCards = AnkiUtils.readCardsFromFile(fileName);
-        return listOfCards;
+        return ankiUtils.readCardsFromFile(fileName);
     }
 
     public void playAnki(List<Card> listOfCards){
-        Scanner scan = new Scanner(System.in);
-        int usersAnswer;
-
         for(Card card : listOfCards){
-            if(!CardStatus.GREEN_BOX.equals(card.getStatus())){
-                AnkiUtils.currentStatusAnki(listOfCards);
-
-                System.out.println("\nQuestion: " + card.getQuestion());
-                System.out.println("(1) Do you know the answer");
-                System.out.println("(2) Do you know a part of the answer");
-                System.out.println("(3) You don't know the answer");
-
-                System.out.println("\nAnswer: ");
-                usersAnswer = scan.nextInt();
-
-                card.setAnswerStatus(usersAnswer);
+            if(card.canBeChecked()){
+                ankiUtils.currentStatusAnki(listOfCards);
+                showAnswerPossibilities(card);
+                card.setAnswerStatus(getAnswerFromUser());
             }
         }
     }
 
+    private Integer getAnswerFromUser(){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nAnswer: ");
+        return scan.nextInt();
+    }
+
+    private void showAnswerPossibilities(Card card) {
+        System.out.println("\nQuestion: " + card.getQuestion());
+        System.out.println("(1) Do you know the answer");
+        System.out.println("(2) Do you know a part of the answer");
+        System.out.println("(3) You don't know the answer");
+    }
+
     public void endGame(String fileName, List<Card> listOfCards){
-        if(AnkiUtils.allTheCardsSettled(listOfCards)){
+        if(ankiUtils.allTheCardsSettled(listOfCards)){
             System.out.println(ANSI_BOLD + "\nCongratulate! The cards are studied properly!" + ANSI_RESET);
         } else {
             updateCardsWithRules(listOfCards);
             System.out.println(ANSI_BOLD + "\nGood job! Goodbye!" + ANSI_RESET);
         }
-        AnkiUtils.saveStatusFile(fileName, listOfCards);
+        ankiUtils.saveStatusFile(fileName, listOfCards);
     }
 
 
@@ -60,10 +62,10 @@ public class AnkiLogic {
      */
     public void updateCardsWithRules(List<Card> listOfCards) {
         for(Card card : listOfCards){
-            if(CardStatus.GREEN_BOX.name().equals(card.getStatus().name())){
-                card.setStatus(CardStatus.ORANGE_BOX);
-            } else if(CardStatus.ORANGE_BOX.name().equals(card.getStatus().name())){
-                card.setStatus(CardStatus.RED_BOX);
+            if(card.isInGreenBox()){
+                card.moveCardToOrangeBox();
+            } else if(card.isInOrangeBox()){
+                card.moveCardToRedBox();
             }
         }
     }
